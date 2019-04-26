@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+  <meta charset="utf-8">
+  <title>Marker Clustering</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+    integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+  <link rel="stylesheet" href="./css/style.css">
+  <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      color: #000
+    }
+
+    #map {
+      height: 81.5%;
+    }
+    .footer {
+      height: 18.5%;
+      background-color: #FFF;
+    }
+    ul {
+      display: block;
+      width: 50%;
+      float: left;
+    }
+
+    ul li {
+      
+      text-align: center;
+    }
+
+    ul li a {
+      text-decoration: none;
+      padding: 0 60px;
+      width: 100%;
+      color: #000;
+      display: inline-block;
+      padding: 7px 0;
+      font-weight: bold;
+      border: 2px solid #000;
+
+    }
+
+    ul li a:hover {
+      text-decoration: none;
+      color: #FFF;
+      background-color: rgb(107, 42, 42)
+    }
+
+    img {
+      width: 100%;
+    }
+
+    .slick-next {
+      right: 0;
+      z-index: 5;
+    }
+
+    .slick-prev {
+      left: 0;
+      z-index: 5;
+    }
+    .all {
+      height: 100%;
+      overflow: hidden
+    }
+  </style>
+
+
+  <script src="js/jquery-3.3.1.min.js"></script>
+  <script src="js/popper.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/main.js"></script>
+</head>
+
+<body>
+  <div class="all">
+    <div id="map"></div>
+    <div class="footer">
+      <ul class="list-unstyled">
+        <li><a class="hvr-shadow-radial" id="hendi1" href="#">Location One</a></li>
+        <li><a class="" id="hendi3" href="#">Location Three</a></li>
+      </ul>
+      <ul class="list-unstyled">
+        <li><a class="" id="hendi2" href="#">Location Two</a></li>
+        <li><a class="" id="hendi4" href="#">Location four</a></li>
+      </ul>
+    </div>
+  </div>
+  <script>
+    $('#hendi1').on('click', function () {
+      google.maps.event.trigger(gmarkers[0], 'click');
+    })
+    $('#hendi2').on('click', function () {
+      google.maps.event.trigger(gmarkers[1], 'click');
+    })
+    $('#hendi3').on('click', function () {
+      google.maps.event.trigger(gmarkers[2], 'click');
+    })
+    $('#hendi4').on('click', function () {
+      google.maps.event.trigger(gmarkers[3], 'click');
+    })
+  </script>
+
+  <script type="text/javascript" src="js/placesdata.js"></script>
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAevmVUj5U9-ZwVxA1p5vOPOhKMOKvZb_k&callback=initMap"
+    type="text/javascript">
+    </script>
+  <script>
+
+    // custom functions
+    var gmarkers = [];
+    var locations = []
+    for (var i = 0; i < dataItem.length; i++) {
+      locations.push(dataItem[i])
+    }
+
+    function initMap() {
+
+      var mapOptions = {
+        center: new google.maps.LatLng(locations[0].lat, locations[0].lng),
+        zoom: 15,
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+
+      };
+
+      var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+
+      //Create and open InfoWindow.
+      var infoWindow = new google.maps.InfoWindow();
+
+      for (var i = 0; i < locations.length; i++) {
+
+        var data = locations[i];
+        var myLatlng = new google.maps.LatLng(data.lat, data.lng);
+
+        var marker = new google.maps.Marker({
+          position: myLatlng,
+          map: map,
+          title: data.title,
+        });
+
+        gmarkers.push(marker);
+        //Attach click event to the marker.
+        (function (marker, data) {
+          google.maps.event.addListener(marker, "click", function (e) {
+            //Wrap the content inside an HTML DIV in order to set height and width of InfoWindow.
+
+            infoWindow.setContent(data.title)
+
+            infoWindow.open(map, marker);
+          });
+        })(marker, data);
+      }
+
+    }
+
+  </script>
+  <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
+  </script>
+</body>
+
+</html>
